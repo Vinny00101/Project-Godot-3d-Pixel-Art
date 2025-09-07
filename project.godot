@@ -1,0 +1,31 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="treino"
+run/main_scene="uid://bjuuxgffjmg3p"
+config/features=PackedStringArray("4.4", "GL Compatibility")
+
+[display]
+
+window/size/initial_position_type=4
+window/size/borderless=true
+window/size/extend_to_title=true
+window/stretch/mode="viewport"
+
+[rendering]
+
+lights_and_shadows/directional_shadow/size=8190
+lights_and_shadows/directional_shadow/size.mobile=6000
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=0
+environment/volumetric_fog/volume_size=512
+lights_and_shadows/positional_shadow/atlas_size=8192

@@ -1,0 +1,147 @@
+[gd_scene load_steps=13 format=3 uid="uid://bjuuxgffjmg3p"]
+
+[ext_resource type="Script" uid="uid://cqhe0qm0yjnvj" path="res://camera_3d.gd" id="1_7eydt"]
+[ext_resource type="Shader" uid="uid://bwwm7u4cvbf2k" path="res://Shader/edge_direction.gdshader" id="1_8180v"]
+[ext_resource type="Texture2D" uid="uid://brv71y1olkvt" path="res://img/Prototype_Grid_Gray_07-128x128.png" id="1_hppag"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8180v"]
+sky_top_color = Color(0.503768, 0.549141, 0.406636, 1)
+sky_horizon_color = Color(0.761047, 0.764641, 0.720015, 1)
+ground_horizon_color = Color(0.761047, 0.764641, 0.720015, 1)
+energy_multiplier = 0.9
+
+[sub_resource type="Sky" id="Sky_7eydt"]
+sky_material = SubResource("ProceduralSkyMaterial_8180v")
+
+[sub_resource type="Environment" id="Environment_1ul2v"]
+background_mode = 2
+sky = SubResource("Sky_7eydt")
+tonemap_mode = 2
+fog_light_color = Color(0.353692, 0.384298, 0.432404, 1)
+fog_height_density = 0.005
+volumetric_fog_density = 0.2
+volumetric_fog_albedo = Color(0.940775, 0.928229, 0.636524, 1)
+volumetric_fog_emission_energy = 55.61
+volumetric_fog_gi_inject = 1.39
+volumetric_fog_anisotropy = 0.9
+volumetric_fog_length = 0.09
+volumetric_fog_sky_affect = 0.0
+adjustment_enabled = true
+adjustment_brightness = 2.49
+
+[sub_resource type="QuadMesh" id="QuadMesh_7eydt"]
+flip_faces = true
+size = Vector2(3, 3)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1ul2v"]
+render_priority = 0
+shader = ExtResource("1_8180v")
+shader_parameter/pixel_size = 0.001
+shader_parameter/normal_edge_bias = Vector3(1, 1, 1)
+shader_parameter/depth_threshold_low = 0.1
+shader_parameter/depth_threshold_high = 2.0
+shader_parameter/normal_threshold_low = 11.0
+shader_parameter/normal_threshold_high = 0.0
+shader_parameter/brighter_line = 2.0
+shader_parameter/darker_line = 25.0
+shader_parameter/neg_sharpen = 10.0
+shader_parameter/neg_threshold_low = 0.1
+shader_parameter/neg_threshold_high = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8180v"]
+albedo_color = Color(0.558287, 0.558287, 0.558287, 1)
+albedo_texture = ExtResource("1_hppag")
+uv1_scale = Vector3(20, 15, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_t8l24"]
+size = Vector3(4, 0.5, 4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7eydt"]
+albedo_color = Color(1, 0, 1, 1)
+albedo_texture = ExtResource("1_hppag")
+uv1_scale = Vector3(2, 2, 1)
+uv1_triplanar_sharpness = 4.14106
+uv1_world_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_hppag"]
+lightmap_size_hint = Vector2i(10, 15)
+uv2_padding = 0.0
+
+[node name="World" type="Node3D"]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 4
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+canvas_item_default_texture_repeat = 1
+size = Vector2i(288, 162)
+render_target_update_mode = 4
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(-0.835807, -0.0868324, 0.542113, 0, 0.987414, 0.158158, -0.549023, 0.13219, -0.825288, -2.38419e-07, -2.38419e-07, 0)
+light_color = Color(0.943805, 0.948763, 0.769479, 1)
+light_energy = 0.41
+light_indirect_energy = 8.795
+light_volumetric_fog_energy = 8.474
+light_specular = 0.0
+shadow_enabled = true
+shadow_bias = 0.0
+shadow_normal_bias = 2.513
+shadow_transmittance_bias = 12.17
+shadow_blur = 1.48
+
+[node name="WorldEnvironment2" type="WorldEnvironment" parent="SubViewportContainer/SubViewport"]
+environment = SubResource("Environment_1ul2v")
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(0.748956, -0.425924, 0.507596, 0, 0.766044, 0.642788, -0.66262, -0.481419, 0.573733, 2.03434, 2.61259, 2.23563)
+projection = 1
+size = 2.0
+script = ExtResource("1_7eydt")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Camera3D"]
+cast_shadow = 0
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_7eydt")
+surface_material_override/0 = SubResource("ShaderMaterial_1ul2v")
+
+[node name="Meshes" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="Plano" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Meshes"]
+transform = Transform3D(5, 0, 0, 0, 0.5, 0, 0, 0, 5, 0, 0.169223, 0)
+material_override = SubResource("StandardMaterial3D_8180v")
+mesh = SubResource("BoxMesh_t8l24")
+skeleton = NodePath("../../../..")
+
+[node name="Box" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Meshes"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0.0134746, 0.493214, -0.0498497)
+material_override = SubResource("StandardMaterial3D_7eydt")
+mesh = SubResource("BoxMesh_hppag")
+skeleton = NodePath("../../../..")
+
+[node name="Box2" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Meshes"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0.749284, 0.498523, 0.604692)
+material_override = SubResource("StandardMaterial3D_7eydt")
+mesh = SubResource("BoxMesh_hppag")
+skeleton = NodePath("../../../..")
+
+[node name="Box3" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Meshes"]
+transform = Transform3D(0.104257, 0, 0, 0, 1.35065, 0, 0, 0, 0.112916, 0.749284, 0.640323, -0.464956)
+material_override = SubResource("StandardMaterial3D_7eydt")
+mesh = SubResource("BoxMesh_hppag")
+skeleton = NodePath("../../../..")
+
+[node name="Box4" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Meshes"]
+transform = Transform3D(0.104257, 0, 0, 0, 1.35065, 0, 0, 0, 0.112916, 0.325261, 0.640323, -0.824154)
+material_override = SubResource("StandardMaterial3D_7eydt")
+mesh = SubResource("BoxMesh_hppag")
+skeleton = NodePath("../../../..")
